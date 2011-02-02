@@ -3,6 +3,7 @@ module Gjak
 	# TODO: read these from config file or db
 	CARB_INSULIN_RATIO    = (1/10.to_f).freeze
 	GLUCOSE_INSULIN_RATIO = (1/40.to_f).freeze
+	TARGET_GLUCOSE        = 100.freeze
 
 	def insulin_from_carbs(carbs)
 		carbs ||= 0
@@ -10,7 +11,7 @@ module Gjak
 	end
 
 	def insulin_from_glucose(glucose)
-		glucose ||= 0
+		glucose = glucose ? glucose - TARGET_GLUCOSE : 0
 		(GLUCOSE_INSULIN_RATIO * glucose).round	
 	end
 
@@ -31,7 +32,7 @@ if $0 == __FILE__
 
 		def setup
 			@carbs, @glucose = 40, 276
-			@glucose_insulin = ((1/40.to_f)*@glucose).round
+			@glucose_insulin = ((1/40.to_f)*(@glucose-100)).round
 			@carbs_insulin   = ((1/10.to_f)*@carbs).round
 		end
 
